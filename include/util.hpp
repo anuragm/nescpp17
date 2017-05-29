@@ -25,4 +25,22 @@ struct bitReg{
   T    get()   { return (data & mask())>>bitnum; }
 };
 
+// ----------------- Memory access ----------------------------
+enum mem_mode // Total 10 modes for NES where actual memory is read.
+  {
+   m_IMM=0, // Immediate mode
+   //--------Zero Page -------------
+   m_ZPG,  //  Zero Page
+   m_ZPX,  //  Zero Page X
+   m_ZPY,  //  Zero Page Y
+   //---------Absolute--------------
+   m_ABS,  //  Absolute
+   m_ABX,  //  Absolute X (Indexed Addressing X)
+   m_ABY,  //  Absolute Y (Indexed Addressing Y)
+   //---------Indirect--------------
+   m_IND,  //  Indirection.
+   m_INX,  //  Pre-Indexed Indirect Addressing
+   m_INY,  //  Post-Indexed Indirect Addressing
+  };
+
 #endif /* UTIL_HPP */

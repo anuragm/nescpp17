@@ -4,6 +4,7 @@
 #include "util.hpp"
 #include <cstdint>
 #include <cstddef>
+#include <cstring>
 
 //Emulate a 6502 CPU.
 
@@ -20,6 +21,30 @@ union statReg{
   u8 byte;
 };
 
+//----------------- CPU Memory class --------------------
+template<std::size_t size>
+class cpu_memory{
+  u8 mem[size];
+public:
+  // Return appropriate memory location, taking mirroring into account.
+  u8& operator[] (u16 address){
+    u8& data = mem[address];
+
+    if(address<=0x1FFF)
+      data = mem[address % 0x0800];
+
+    if(0x2000<=address && address<0x4000)
+      data = mem[0x2000 + (address % 8)];
+
+    return data;
+  };
+
+  void zeros(){
+    std::memset(mem,0,size);
+  }
+};
+
+//----------------- CPU Class --------------------------------
 struct cpu_6502 {
   statReg P; // Process status register.
   u8 A; // accumulator register.
@@ -27,12 +52,8 @@ struct cpu_6502 {
   u8 Y; // Y
   u8 SP; //Stack pointer.
   u8 PC; //Program counter.
-  u8 mem[64*1024]; // The memeory of the machine. Much of this is mirrored. 64 KB
-};
-
-struct ppu_2c02{
-  u8 mem[16*1024]; //PPU memory. 16 KB Physical, 64 KB virtual
-  u8 spr_ram[256]; //Sprite RAM. 256 Bytes.
+  cpu_memory<64*1024> mem; // The memeory of the machine. Much of this is mirrored. 64 KB
+  u8& operand(mem_mode mode); // Returns a reference to the memory where operand is stored.
 };
 
 #endif /* CPU_HPP */
