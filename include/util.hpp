@@ -21,7 +21,7 @@ struct bitReg{
 
   constexpr const T mask() const { return 1u << bitnum; }
   void set()   { data = (data | mask()) ; }
-  void unset() { data = (data & ~mask()); }
+  void clear() { data = (data & ~mask()); }
   T    get()   { return (data & mask())>>bitnum; }
 };
 
