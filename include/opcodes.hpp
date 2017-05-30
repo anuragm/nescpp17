@@ -12,18 +12,21 @@
 
 struct opcodes {
   cpu_6502* cpu;
-  void set_flags();
+  void set_flags(u8 result); // Sets zero and sign flag depending on input.
   void do_jump(u8 offset);
+  u8 subtract(u8 a, u8 b); //Performs a-b and sets relavent flags.
+  u8 add(u8 a, u8 b); // Performs a+b and sets the relavent flags.
 
   // Opcodes that require memory operations.
-  template <mem_mode mode> void ADC(); // Add memory to accumulator.
-  template <mem_mode mode> void AND(); // AND memory with accumulator.
-  template <mem_mode mode> void ASL(); // Shift Left One Bit (Memory or Accumulator)
+  template <mem_mode mode> void ADC();   // Add memory to accumulator. Add with carry.
+  template <mem_mode mode> void AND();   // AND memory with accumulator.
+  template <mem_mode mode> void ASL();   // Shift Left One Bit (Memory or Accumulator)
   template <mem_mode mode> void CMP();   // Compare Memory and Accumulator
   template <mem_mode mode> void CPX();   // Compare Memory and Index X
   template <mem_mode mode> void CPY();   // Compare Memory and Index Y
   template <mem_mode mode> void DEC();   // Decrement Memory by One
   template <mem_mode mode> void EOR();   // "Exclusive-Or" Memory with Accumulator
+  template <mem_mode mode> void INC();   // Increment Memory by One
   template <mem_mode mode> void LDA();   // Load Accumulator with Memory
   template <mem_mode mode> void LDX();   // Load Index X with Memory
   template <mem_mode mode> void LDY();   // Load Index Y with Memory
@@ -60,7 +63,7 @@ struct opcodes {
   void CLV();   // Clear Overflow Flag
   void DEX();   // Decrement Index X by One
   void DEY();   // Decrement Index Y by One
-  void INC();   // Increment Memory by One
+
   void INX();   // Increment Index X by One
   void INY();   // Increment Index Y by One
   void JMP();   // Jump to New Location

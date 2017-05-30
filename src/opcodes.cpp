@@ -8,7 +8,16 @@ void opcodes::do_jump(u8 offset)
   cpu->PC += jump_value;
 }
 
-void opcodes::set_flags(){
+void opcodes::set_flags(u8 result){ // Set zero and sign flag.
+  (result==0) ? cpu->P.Z.set() : cpu->P.Z.clear(); // Zero flag
+  (result>=0x80) ? cpu->P.S.set() : cpu->P.S.clear(); // Sign flag
+}
+
+u8 opcodes::subtract(u8 a, u8 b){ // Subtract b from a
+  (a>b) ? cpu->P.C.set() : cpu->P.C.clear();
+  u8 result = a-b; // C++ standard ensure correct result.
+  set_flags(result);
+  return result;
 }
 
 template <mem_mode mode> // "AND" memory with accumulator
@@ -86,3 +95,21 @@ void opcodes::BIT(){ // Test bits in memory with accumulator
   (operand & 0b10000000) ? cpu->P.S.set() : cpu->P.S.clear();
   (operand & 0b01000000) ? cpu->P.V.set() : cpu->P.V.clear();
 }
+void opcodes::JMP() { //Indirect jump
+  // Read the two bytes. Go the the this memory location, and read the next two
+  // bytes. This gives an address. Return this value.
+  u8 low_byte  = cpu->mem[cpu->PC++];
+  u8 high_byte = cpu->mem[cpu->PC++];
+  u16 address = combine_bytes(low_byte,high_byte);
+
+  // BUG in 6502 used in NES. If address is at page boundary (xxFF) , then the high byte
+  // is read from (xx00) instead of ((xx+1)00).
+  low_byte = cpu->mem[address];
+  u16 hb_address =
+    (get_low_byte(address) == 0xFF)? combine_bytes(00,get_high_byte(address)) : (address+1);
+  high_byte = cpu->mem[hb_address];
+  address = combine_bytes(low_byte,high_byte);
+
+  cpu-> PC = address; // And jump.
+}
+

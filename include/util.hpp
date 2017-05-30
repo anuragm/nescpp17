@@ -38,7 +38,6 @@ enum mem_mode // Total 10 modes for NES where actual memory is read.
    m_ABX,  //  Absolute X (Indexed Addressing X)
    m_ABY,  //  Absolute Y (Indexed Addressing Y)
    //---------Indirect--------------
-   m_IND,  //  Indirection.
    m_INX,  //  Pre-Indexed Indirect Addressing
    m_INY,  //  Post-Indexed Indirect Addressing
    // --------Special additional modes -----------

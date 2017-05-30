@@ -53,7 +53,10 @@ struct cpu_6502 {
   u8 SP; //Stack pointer.
   u16 PC; //Program counter.
   cpu_memory<64*1024> mem; // The memory of the machine. Much of this is mirrored. 64 KB
-  u8& operand(mem_mode mode); // Returns a reference to the memory where operand is stored.
+
+  // Returns a reference to the memory where operand is stored. Note that this is only
+  // used when we operate on single byte of memory, which is all instructions except jumps.
+  u8& operand(mem_mode mode);
 };
 
 #endif /* CPU_HPP */
