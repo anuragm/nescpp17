@@ -6,7 +6,7 @@ u8& cpu_6502::operand(mem_mode mode){
   //When control reaches here, the PC is at one byte after the opcode. For example, for
   //immediate mode, the value of memory at the program counter is returned, and PC is
   //incremented by 1, etc.
-  u16 address; u8 low_byte, high_byte;
+  u16 address, hb_address; u8 low_byte, high_byte;
 
   switch(mode){
   case m_IMM: //Immediate mode.
@@ -54,12 +54,19 @@ u8& cpu_6502::operand(mem_mode mode){
     address = combine_bytes(low_byte,high_byte);
     return mem[address+Y];
 
-  case m_IND: // Indirection.
-    // Read the next byte. Go the the this memory location, and read the next two
+  case m_IND: // Indirection. Only used by JMP. Implement JMP bug.
+    // Read the two bytes. Go the the this memory location, and read the next two
     // bytes. This gives an address. Return this value.
-    address = mem[PC++];
+    low_byte  = mem[PC++];
+    high_byte = mem[PC++];
+    address = combine_bytes(low_byte,high_byte);
+
+    // BUG in 6502 used in NES. If address is at page boundary (xxFF) , then the high byte
+    // is read from (xx00) instead of ((xx+1)00).
     low_byte = mem[address];
-    high_byte = mem[address+1];
+    hb_address = (get_low_byte(address) == 0xFF)? combine_bytes(00,get_high_byte(address)) : (address+1);
+    high_byte = mem[hb_address];
+
     address = combine_bytes(low_byte,high_byte);
     return mem[address];
 
