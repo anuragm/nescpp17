@@ -51,7 +51,7 @@ struct cpu_6502 {
   u8 X; // X
   u8 Y; // Y
   u8 SP; //Stack pointer.
-  u8 PC; //Program counter.
+  u16 PC; //Program counter.
   cpu_memory<64*1024> mem; // The memeory of the machine. Much of this is mirrored. 64 KB
   u8& operand(mem_mode mode); // Returns a reference to the memory where operand is stored.
 };
