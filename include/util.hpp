@@ -41,6 +41,8 @@ enum mem_mode // Total 10 modes for NES where actual memory is read.
    m_IND,  //  Indirection.
    m_INX,  //  Pre-Indexed Indirect Addressing
    m_INY,  //  Post-Indexed Indirect Addressing
+   // --------Special additional modes -----------
+   m_ACCUM // Accumulator
   };
 
 // ---------- Utility to get high/low byte -------------- //

@@ -88,6 +88,9 @@ u8& cpu_6502::operand(mem_mode mode){
     address = combine_bytes(low_byte,high_byte);
     return mem[address+Y];
 
+  case m_ACCUM: // Accumulator addressing. Return the reference to accumulator.
+    return A;
+
   default:
     return mem[PC++]; // Control should never reach here.
   };
