@@ -22,14 +22,14 @@ u8& cpu_6502::operand(mem_mode mode){
 
   case m_ZPX: // Zero Page X
     // The adress is the 8 bits of the next byte, added to the 8 bits of X
-    // register. IF the addition overflows, it's mod 0xFF. This is automatically garunteed
+    // register. IF the addition overflows, it's mod 0xFF. This is automatically guaranteed
     // by C++ standard.
     address = mem[PC++] + X;
     return mem[address];
 
   case m_ZPY: // Zero Page Y
     // The adress is the 8 bits of the next byte, added to the 8 bits of Y
-    // register. IF the addition overflows, it's mod 0xFF. This is automatically garunteed
+    // register. IF the addition overflows, it's mod 0xFF. This is automatically guaranteed
     // by C++ standard.
     address = mem[PC++] + Y;
     return mem[address];
@@ -49,7 +49,7 @@ u8& cpu_6502::operand(mem_mode mode){
     address16.bytes[1] = mem[PC++];
     return mem[address16.word+X];
 
-  case m_ABY: // Absolute memory addres w.r.t. Y.
+  case m_ABY: // Absolute memory address w.r.t. Y.
     address16.bytes[0] = mem[PC++];
     address16.bytes[1] = mem[PC++];
     return mem[address16.word+X];

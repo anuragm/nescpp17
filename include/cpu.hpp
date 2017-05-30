@@ -14,7 +14,7 @@ union statReg{
   bitReg<1> Z ; //Zero Flag
   bitReg<2> I ; //Interrupt enable/disable flag
   bitReg<3> D ; //Decimal mode flag. Not working on NES.
-  bitReg<4> B ; //Set when software interrupt is execulted.
+  bitReg<4> B ; //Set when software interrupt is executed.
   bitReg<5> UNUSED ;
   bitReg<6> V ; //Overflow flag
   bitReg<7> S ; //Sign flag
@@ -52,7 +52,7 @@ struct cpu_6502 {
   u8 Y; // Y
   u8 SP; //Stack pointer.
   u16 PC; //Program counter.
-  cpu_memory<64*1024> mem; // The memeory of the machine. Much of this is mirrored. 64 KB
+  cpu_memory<64*1024> mem; // The memory of the machine. Much of this is mirrored. 64 KB
   u8& operand(mem_mode mode); // Returns a reference to the memory where operand is stored.
 };
 
