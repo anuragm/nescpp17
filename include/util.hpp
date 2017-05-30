@@ -43,4 +43,10 @@ enum mem_mode // Total 10 modes for NES where actual memory is read.
    m_INY,  //  Post-Indexed Indirect Addressing
   };
 
+// ---------- Utility to get high/low byte -------------- //
+inline u8 get_high_byte(u16 word) { return word >> 8; }
+inline u8 get_low_byte (u16 word) { return word & 0xFF; }
+inline u16 combine_bytes(u8 low_byte, u8 high_byte)
+{ u16 temp = low_byte + (u16(high_byte)<<8); return temp;}
+
 #endif /* UTIL_HPP */
