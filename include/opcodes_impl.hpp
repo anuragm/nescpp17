@@ -1,4 +1,9 @@
-// Contains the implementation of all the opcodes.
+#ifndef OPCODES_IMPL_HPP
+
+#define OPCODES_IMPL_HPP
+// Contains the implementation of all the opcodes. This must be done in a header file due
+// to use of templates.
+
 #include "opcodes.hpp"
 
 // Implement each function.
@@ -377,3 +382,5 @@ void opcodes::TYA(){    // Transfer Index Y to Accumulator
   cpu->A = cpu->Y;
   set_flags(cpu->A);
 }
+
+#endif

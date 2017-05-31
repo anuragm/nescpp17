@@ -81,28 +81,6 @@ struct opcodes {
   void TYA();   // Transfer Index Y to Accumulator
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#include "opcodes_impl.hpp" // Include the implementation of templated functions.
 
 #endif /* OPCODES_HPP */
