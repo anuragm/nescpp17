@@ -12,10 +12,10 @@
 
 struct opcodes {
   cpu_6502* cpu;
-  void set_flags(u8 result); // Sets zero and sign flag depending on input.
-  void do_jump(u8 offset);
-  u8 subtract(u8 a, u8 b); //Performs a-b and sets relavent flags.
-  u8 add(u8 a, u8 b); // Performs a+b and sets the relavent flags.
+  void set_flags(u8 result);  // Sets zero and sign flag depending on input.
+  void do_jump(u8 offset);    // Performs relative addressing computations.
+  u8   subtract(u8 a, u8 b);  // Performs a-b and sets relavent flags.
+  u8   add(u8 a, u8 b);       // Performs a+b and sets the relavent flags.
 
   // Opcodes that require memory operations.
   template <mem_mode mode> void ADC();   // Add memory to accumulator. Add with carry.
@@ -38,12 +38,6 @@ struct opcodes {
   template <mem_mode mode> void STA();   // Store Accumulator in Memory
   template <mem_mode mode> void STX();   // Store Index X in Memory
   template <mem_mode mode> void STY();   // Store Index Y in Memory
-  template <mem_mode mode> void TAX();   // Transfer Accumulator to Index X
-  template <mem_mode mode> void TAY();   // Transfer Accumulator to Index Y
-  template <mem_mode mode> void TSX();   // Transfer Stack Pointer to Index X
-  template <mem_mode mode> void TXA();   // Transfer Index X to Accumulator
-  template <mem_mode mode> void TXS();   // Transfer Index X to Stack Pointer
-  template <mem_mode mode> void TYA();   // Transfer Index Y to Accumulator
   template <mem_mode mode> void BIT();   // Test Bits in Memory with Accumulator
 
   // No operand opcodes.
@@ -78,6 +72,13 @@ struct opcodes {
   void SEC();   // Set Carry Flag
   void SED();   // Set Decimal Mode
   void SEI();   // Set Interrupt Disable Status
+
+  void TAX();   // Transfer Accumulator to Index X
+  void TAY();   // Transfer Accumulator to Index Y
+  void TSX();   // Transfer Stack Pointer to Index X
+  void TXA();   // Transfer Index X to Accumulator
+  void TXS();   // Transfer Index X to Stack Pointer
+  void TYA();   // Transfer Index Y to Accumulator
 };
 
 

@@ -23,6 +23,7 @@ struct bitReg{
   void set()   { data = (data | mask()) ; }
   void clear() { data = (data & ~mask()); }
   T    get()   { return (data & mask())>>bitnum; }
+  void operator = (bool val) { val?set():clear(); }
 };
 
 // ----------------- Memory access ----------------------------
