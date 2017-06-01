@@ -60,7 +60,8 @@ struct opcodes {
 
   void INX();   // Increment Index X by One
   void INY();   // Increment Index Y by One
-  void JMP();   // Jump to New Location
+  void JMP_IND();  // Jump to New Location, Indirect.
+  void JMP_ABS();  // Jump to New Location, Direct.
   void JSR();   // Jump to New Location Saving Return Address
   void NOP();   // No Operation
   void PHA();   // Push Accumulator on Stack

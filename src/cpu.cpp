@@ -34,7 +34,7 @@ cpu::cpu() {
   opcode_table[0x48] = &opcodes::PHA         ; opcode_table[0x58] = &opcodes::CLI        ;
   opcode_table[0x49] = &opcodes::EOR<m_IMM>  ; opcode_table[0x59] = &opcodes::EOR<m_ABY> ;
   opcode_table[0x4A] = &opcodes::LSR<m_ACCUM>; opcode_table[0x5D] = &opcodes::EOR<m_ABX> ;
-  opcode_table[0x4C] = &opcodes::JMP         ; opcode_table[0x5E] = &opcodes::LSR<m_ABX> ;
+  opcode_table[0x4C] = &opcodes::JMP_ABS     ; opcode_table[0x5E] = &opcodes::LSR<m_ABX> ;
   opcode_table[0x4D] = &opcodes::EOR<m_ABS>  ;
   opcode_table[0x4E] = &opcodes::LSR<m_ABS>  ;
 
@@ -45,7 +45,7 @@ cpu::cpu() {
   opcode_table[0x68] = &opcodes::PLA         ; opcode_table[0x78] = &opcodes::SEI        ;
   opcode_table[0x69] = &opcodes::ADC<m_IMM>  ; opcode_table[0x79] = &opcodes::ADC<m_ABY> ;
   opcode_table[0x6A] = &opcodes::ROR<m_ACCUM>; opcode_table[0x7D] = &opcodes::ADC<m_ABX> ;
-  opcode_table[0x6C] = &opcodes::JMP         ; opcode_table[0x7E] = &opcodes::ROR<m_ABX> ;
+  opcode_table[0x6C] = &opcodes::JMP_IND     ; opcode_table[0x7E] = &opcodes::ROR<m_ABX> ;
   opcode_table[0x6D] = &opcodes::ADC<m_ABS>  ;
   opcode_table[0x6E] = &opcodes::ROR<m_ABS>  ;
 

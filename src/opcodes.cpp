@@ -88,7 +88,7 @@ void opcodes::INY() { // Increment Y
   set_flags(++core->Y);
 }
 
-void opcodes::JMP() { //Indirect jump
+void opcodes::JMP_IND() { //Indirect jump
   // Read the two bytes. Go the the this memory location, and read the next two
   // bytes. This gives an address. Return this value.
   u8 low_byte  = core->mem[core->PC++];
@@ -106,7 +106,14 @@ void opcodes::JMP() { //Indirect jump
   core-> PC = address; // And jump.
 }
 
-void opcodes::JSR() { //Jump to absolute address
+void opcodes::JMP_ABS() { // Direct jump to given address.
+  u8 low_byte = core->mem[core->PC++];
+  u8 high_byte = core->mem[core->PC++];
+  u16 address = combine_bytes(low_byte,high_byte);
+  core->PC = address;
+}
+
+void opcodes::JSR() { //Jump to absolute address, Saving Return Address
   u8 low_byte = core->mem[core->PC++];
   u8 high_byte = core->mem[core->PC++];
   u16 address = combine_bytes(low_byte,high_byte);
