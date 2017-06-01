@@ -12,10 +12,10 @@
 
 struct opcodes {
   cpu_6502* cpu;
-  void set_flags(u8 result);  // Sets zero and sign flag depending on input.
-  void do_jump(u8 offset);    // Performs relative addressing computations.
-  u8   subtract(u8 a, u8 b);  // Performs a-b and sets relavent flags.
-  u8   add(u8 a, u8 b);       // Performs a+b and sets the relavent flags.
+  void set_flags(const u8& result);  // Sets zero and sign flag depending on input.
+  void do_jump(const u8& offset);    // Performs relative addressing computations.
+  u8   subtract(const u8& a, const u8& b);  // Performs a-b and sets relevant flags.
+  u8   add(const u8& a, const u8& b);       // Performs a+b and sets the relevant flags.
 
   // Opcodes that require memory operations.
   template <mem_mode mode> void ADC();   // Add memory to accumulator. Add with carry.

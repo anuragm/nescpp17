@@ -5,36 +5,52 @@
 // to use of templates.
 
 #include "opcodes.hpp"
+#include "util.hpp"
 
 // Implement each function.
-inline void opcodes::do_jump(u8 offset)
+inline void opcodes::do_jump(const u8& offset)
 {
-  i8 jump_value = offset<128 ? offset : (offset-256);
+  i16 jump_value = offset<128 ? offset : (i16(offset)-256);
   cpu->PC += jump_value;
 }
 
-inline void opcodes::set_flags(u8 result){ // Set zero and sign flag.
-  (result==0) ? cpu->P.Z.set() : cpu->P.Z.clear(); // Zero flag
-  (result>=0x80) ? cpu->P.S.set() : cpu->P.S.clear(); // Sign flag
+inline void opcodes::set_flags(const u8& result){ // Set zero and sign flag.
+  cpu->P.Z = (result==0);    // Zero flag
+  cpu->P.S = (result>=0x80); // Sign flag
 }
 
-inline u8 opcodes::subtract(u8 a, u8 b){ // Subtract b from a
-  (a>b) ? cpu->P.C.set() : cpu->P.C.clear();
+inline u8 opcodes::add(const u8& a, const u8& b){ //Add a with b
+  u8 result = a+b;
+  cpu->P.C = ((UINT8_MAX-a) < b); // Detect overflow.
+  set_flags(result);
+  return result;
+}
+
+inline u8 opcodes::subtract(const u8& a, const u8& b){ // Subtract b from a
+  cpu->P.C = (a>=b);
   u8 result = a-b; // C++ standard ensure correct result.
   set_flags(result);
   return result;
+}
+
+template <mem_mode mode>
+void opcodes::ADC(){   // Add memory to accumulator. Add with carry.
+  u8 operand = cpu->operand(mode);
+  u8 op1 = cpu->A;
+  u8 op2 = operand;
+  if (cpu->P.C.get()==1) op2++;
+
+  u8 result = add(op1,op2); // This set Z,S and C flags.
+  cpu->A = result;
+  //Detect signed overflow, and set V accordingly. http://archive.is/VAxtz
+  cpu->P.V = (op1^result) & (op2^result) & 0x80;
 }
 
 template <mem_mode mode> // "AND" memory with accumulator
 void opcodes::AND(){
   u8 operand = cpu->operand(mode); // This has side effect of incrementing the PC.
   cpu->A = cpu->A & operand;
-
-  if (~cpu->A)
-    cpu->P.Z.set();
-
-  if (cpu->A & 0x10)
-    cpu->P.S.set();
+  set_flags(cpu->A);
 }
 
 template <mem_mode mode> // Shift Left One Bit (Memory or Accumulator)
@@ -51,11 +67,10 @@ void opcodes::ASL(){
 template <mem_mode mode>
 void opcodes::BIT(){ // Test bits in memory with accumulator
   u8 operand = cpu->operand(mode);
-  if (cpu->A & operand)
-    cpu->P.Z.set();
 
-  (operand & 0b10000000) ? cpu->P.S.set() : cpu->P.S.clear();
-  (operand & 0b01000000) ? cpu->P.V.set() : cpu->P.V.clear();
+  cpu->P.Z = (cpu->A & operand);
+  cpu->P.S = (operand & 0b10000000);
+  cpu->P.V = (operand & 0b01000000);
 }
 
 template <mem_mode mode>
@@ -166,7 +181,10 @@ void opcodes::SBC() { // Subtract operand from accumulator with borrow.
   u8 op2 = operand;
   if (cpu->P.C.get()==0) op2++;
 
-  cpu->A = subtract(op1,op2);
+  u8 result = subtract(op1,op2);
+  cpu->A = result;
+  // Set the overflow flag if needed.
+  cpu->P.V = (op1^result) & ((~op2)^result) & 0x80;
 }
 
 template <mem_mode mode>
