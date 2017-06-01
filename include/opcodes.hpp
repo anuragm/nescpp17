@@ -3,7 +3,7 @@
 
 #include <functional>
 #include "util.hpp"
-#include "cpu.hpp"
+#include "cpu_core.hpp"
 
 // Defines all the opcode function, and a function table.
 //std::function<u8()> opcodes[256]; // A function array for 256 opcodes.
@@ -11,7 +11,7 @@
 //---------Opcodes adapted from http://nesdev.com/6502_cpu.txt ///
 
 struct opcodes {
-  cpu_6502* cpu;
+  cpu_core_6502* core;
   void set_flags(const u8& result);  // Sets zero and sign flag depending on input.
   void do_jump(const u8& offset);    // Performs relative addressing computations.
   u8   subtract(const u8& a, const u8& b);  // Performs a-b and sets relevant flags.

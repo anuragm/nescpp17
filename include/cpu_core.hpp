@@ -1,5 +1,5 @@
-#ifndef CPU_HPP
-#define CPU_HPP
+#ifndef CPU_CORE_HPP
+#define CPU_CORE_HPP
 
 #include "util.hpp"
 #include <cstdint>
@@ -23,7 +23,7 @@ union statReg{
 
 //----------------- CPU Memory class --------------------
 template<std::size_t size>
-class cpu_memory{
+class cpu_core_memory{
   u8 mem[size];
 public:
   // Return appropriate memory location, taking mirroring into account.
@@ -44,19 +44,19 @@ public:
   }
 };
 
-//----------------- CPU Class --------------------------------
-struct cpu_6502 {
+//----------------- CPU Core Class --------------------------------
+struct cpu_core_6502 {
   statReg P; // Process status register.
   u8 A; // accumulator register.
   u8 X; // X
   u8 Y; // Y
   u8 SP; //Stack pointer.
   u16 PC; //Program counter.
-  cpu_memory<64*1024> mem; // The memory of the machine. Much of this is mirrored. 64 KB
+  cpu_core_memory<64*1024> mem; // The memory of the machine. 64 KB
 
   // Returns a reference to the memory where operand is stored. Note that this is only
   // used when we operate on single byte of memory, which is all instructions except jumps.
   u8& operand(mem_mode mode);
 };
 
-#endif /* CPU_HPP */
+#endif /* CPU_CORE_HPP */

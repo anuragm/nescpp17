@@ -1,8 +1,8 @@
 // CPU Implementation
 
-#include "cpu.hpp"
+#include "cpu_core.hpp"
 
-u8& cpu_6502::operand(mem_mode mode){
+u8& cpu_core_6502::operand(mem_mode mode){
   //When control reaches here, the PC is at one byte after the opcode. For example, for
   //immediate mode, the value of memory at the program counter is returned, and PC is
   //incremented by 1, etc.
