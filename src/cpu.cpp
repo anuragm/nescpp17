@@ -1,6 +1,15 @@
 #include "cpu.hpp"
 
 cpu::cpu() {
+  //Set the CPU core memory and registers to zero.
+  cpu_core.mem.zeros();
+  cpu_core.P.byte = 0;
+  cpu_core.A      = 0;
+  cpu_core.X      = 0;
+  cpu_core.Y      = 0;
+  cpu_core.SP     = 0;
+  cpu_core.PC     = 0;
+
   //Set the member CPU core of opcodes to our CPU core.
   code.core = &cpu_core;
 
