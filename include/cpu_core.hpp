@@ -24,11 +24,14 @@ union statReg{
 //----------------- CPU Memory class --------------------
 template<std::size_t size>
 class cpu_core_memory{
+  // FIXME: This needs to be heavily re-factored. In particular, writes to ROM Area mean
+  // something particularly special, in context of MMU implementation.
+
   u8 mem[size];
 public:
   // Return appropriate memory location, taking mirroring into account.
-  u8& operator[] (u16 address){
-    u8& data = mem[address];
+  u8 operator[] (u16 address){
+    u8 data = mem[address];
 
     if(address<=0x1FFF)
       data = mem[address % 0x0800];
@@ -38,6 +41,9 @@ public:
 
     return data;
   };
+
+  void write_address(u16 address, u8 data);
+  u8   read_address(u16 address);
 
   void zeros(){
     std::memset(mem,0,size);
@@ -56,7 +62,12 @@ struct cpu_core_6502 {
 
   // Returns a reference to the memory where operand is stored. Note that this is only
   // used when we operate on single byte of memory, which is all instructions except jumps.
-  u8& operand(mem_mode mode);
+  u8 operand(mem_mode mode);
+  u16 get_address(mem_mode mode); // Same as operand, except returns address.
+
+  //Stack operations.
+  void push_stack(u8 data);
+  u8   pop_stack();
 };
 
 #endif /* CPU_CORE_HPP */

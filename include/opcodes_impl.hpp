@@ -55,13 +55,15 @@ void opcodes::AND(){
 
 template <mem_mode mode> // Shift Left One Bit (Memory or Accumulator)
 void opcodes::ASL(){
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
 
   u8 high_bit = (operand & 0x80) >> 7;
   core->P.C = high_bit;
 
   operand = operand << 1;
   set_flags(operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
@@ -75,26 +77,37 @@ void opcodes::BIT(){ // Test bits in memory with accumulator
 
 template <mem_mode mode>
 void opcodes::CMP() { // Compare memory and accumulator.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
   subtract(core->A, operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::CPX() { // Compare memory and X.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   subtract(core->X, operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::CPY() { // Compare memory and Y.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   subtract(core->Y, operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::DEC() { // Decrement memory. Carry ignored.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   set_flags(--operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
@@ -105,8 +118,11 @@ void opcodes::EOR() { // XOR Accumulator with memory.
 
 template <mem_mode mode>
 void opcodes::INC() { // Increment memory. Carry ignored.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   set_flags(++operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
@@ -132,10 +148,13 @@ void opcodes::LDY(){ // Load memory with Y.
 
 template <mem_mode mode>
 void opcodes::LSR() { // Logical shift right.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   core->P.C = (operand%2);
   operand = operand >> 1;
   set_flags(operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
@@ -147,7 +166,9 @@ void opcodes::ORA() { // "OR" memory with accumulator.
 template <mem_mode mode>
 void opcodes::ROL() { // Rotate one bit left.
   //Old carry bit becomes the LSB and the old MSB becomes the carry bit.
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   u8 old_carry = core->P.C.get();
   u8 new_carry = (operand & 0x80);
 
@@ -156,12 +177,15 @@ void opcodes::ROL() { // Rotate one bit left.
   core->P.C = new_carry; // old MSB becomes new carry bit.
 
   set_flags(operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::ROR() { // Rotate one bit right.
   //Old carry bit becomes the MSB and the old LSB becomes the carry bit.
-  u8& operand  = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   u8 old_carry = core->P.C.get();
   u8 new_carry = (operand & 0x01);
 
@@ -170,6 +194,7 @@ void opcodes::ROR() { // Rotate one bit right.
   core->P.C = new_carry; // old LSB becomes new carry bit.
 
   set_flags(operand);
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
@@ -189,20 +214,29 @@ void opcodes::SBC() { // Subtract operand from accumulator with borrow.
 
 template <mem_mode mode>
 void opcodes::STA() { // // Store Accumulator in Memory
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   operand = core->A;
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::STX(){   // Store Index X in Memory
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   operand = core->X;
+  core->mem.write_address(address,operand);
 }
 
 template <mem_mode mode>
 void opcodes::STY(){   // Store Index Y in Memory
-  u8& operand = core->operand(mode);
+  u16 address = core->get_address(mode);
+  u8 operand  = core->mem.read_address(address);
+
   operand = core->Y;
+  core->mem.write_address(address,operand);
 }
 
 #endif

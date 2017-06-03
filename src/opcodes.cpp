@@ -38,9 +38,9 @@ void opcodes::BRK() { // Force break.
 
   core->P.B.set(); // Break flag is set.
   core->PC++; //Increment the program counter.
-  core->mem[core->SP--] = get_high_byte(core->PC); // Push the high byte on stack.
-  core->mem[core->SP--] = get_low_byte(core->PC);  // Push the low byte on stack.
-  core->mem[core->SP--] = core->P.byte;            // Push the status flags.
+  core->push_stack(get_high_byte(core->PC)); // Push the high byte on stack.
+  core->push_stack(get_low_byte(core->PC));  // Push the low byte on stack.
+  core->push_stack(core->P.byte);            // Push the status flags.
 
   //And then, set PC to the value found in 0xFFFE and 0xFFFF.
   core->PC = combine_bytes(core->mem[0xFFFE],core->mem[0xFFFF]);
@@ -119,8 +119,8 @@ void opcodes::JSR() { //Jump to absolute address, Saving Return Address
   u16 address = combine_bytes(low_byte,high_byte);
   // JSR Bug. At this point, PC is at the next opcode. However, JSR pushes PC-1 as the
   // return address.
-  core->mem[core->SP--] = get_high_byte(core->PC-1);
-  core->mem[core->SP--] = get_low_byte(core->PC-1);
+  core->push_stack(get_high_byte(core->PC-1));
+  core->push_stack(get_low_byte(core->PC-1));
   core->PC = address;
 }
 
@@ -128,37 +128,36 @@ void opcodes::NOP() { // No operation.
 }
 
 void opcodes::PHA() { // Push accumulator to stack.
-  core->mem[core->SP--] = core->A;
-
+  core->push_stack(core->A);
 }
 
 void opcodes::PHP() { // Push processor status to stack.
-  core->mem[core->SP--] = core->P.byte;
+  core->push_stack(core->P.byte);
 }
 
 void opcodes::PLA() { // Pop stack and store in accumulator.
-  core->A = core->mem[core->SP++];
+  core->A = core->pop_stack();
   set_flags(core->A);
 }
 
 void opcodes::PLP() { // Pop stack and store in process status.
-  core->P.byte = core->mem[core->SP++];
+  core->P.byte = core->pop_stack();
 }
 
 void opcodes::RTI() { // Return from interrupt
   // An interrupt pushed PC into the stack, high byte followed by low byte. Then it pushed
   // status register. Now, pop back ... so reverse order.
-  core->P.byte = core->mem[core->SP--];
-  u8 low_byte = core->mem[core->SP--];
-  u8 high_byte = core->mem[core->SP--];
+  core->P.byte = core->pop_stack();
+  u8 low_byte  = core->pop_stack();
+  u8 high_byte = core->pop_stack();
   core->PC = combine_bytes(low_byte,high_byte);
 }
 
 void opcodes::RTS() { // Return from subroutine.
   // An JSR pushed (PC-1) into the stack, high byte followed by low byte.
   // Now, pop back ... so reverse order.
-  u8 low_byte = core->mem[core->SP--];
-  u8 high_byte = core->mem[core->SP--];
+  u8 low_byte = core->pop_stack();
+  u8 high_byte = core->pop_stack();
   core->PC = combine_bytes(low_byte,high_byte)+1;
 }
 
