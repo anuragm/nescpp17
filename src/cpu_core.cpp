@@ -161,3 +161,16 @@ u16 cpu_core_6502::get_address(mem_mode mode){
     return address; // Control should never reach here.
   };
 }
+
+// ------------------- Stack functions ----------------------- //
+u8 cpu_core_6502::pop_stack(){
+  // The 6502 stack grows downwards. Thus, when items are popped, stack pointer
+  // increases. The location of stack is 0x0100 to 0x01FF, thus 256 bytes.
+  u8 data = mem[0x0100+SP]; SP++;
+  return data;
+}
+
+void cpu_core_6502::push_stack(u8 data){
+  mem.write_address(0x0100+SP,data);
+  SP--;
+}
