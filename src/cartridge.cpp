@@ -21,7 +21,7 @@ cartridge::cartridge(std::string file){
   trainer_present  = header[6] &  4;
   four_screen_vram = header[6] & 16;
 
-  mapper_number = (header[6]>>4) + (header[7] & 0xF0);
+  mapper_number = combine_bytes(get_low_byte(header[6]),get_high_byte(header[7]));
   prg_rom.init(num_prg_rom);
   chr_rom.init(num_chr_rom);
 
@@ -72,4 +72,17 @@ void cartridge::print_debug_info(){
   std::printf("Mirroring type is %s.\n",
               mirroring_type ==
               cartridge::mirror_type::horiz ? "Horizontal" : "Vertical");
+}
+
+bool cartridge::check_rom(){
+  bool is_valid = true;
+  // First see if thise first fours bytes are NES and break character.
+  is_valid = is_valid & (header[0]==0x4E) & (header[1]==0x45) & (header[2]==0x53)
+    & (header[4] == 0x1A);
+
+  // Make sure Byte 8-15 are 0.
+  for (u8 ii=8;ii<16;ii++)
+    is_valid &= (header[ii]==0);
+
+  return is_valid;
 }

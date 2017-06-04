@@ -26,8 +26,10 @@ class cartridge {
   u8   mapper_number;
 
 public:
+  cartridge() = delete ;
   cartridge(std::string file); // Load the file into RAM.
   void print_debug_info(); // Print the header.
+  bool check_rom(); // Checks if the ROM has correct header.
 };
 
 #endif /* CARTRIDGE_HPP */
