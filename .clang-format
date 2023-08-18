@@ -1,0 +1,6 @@
+# -*-Conf-*-
+---
+Language:        Cpp
+BasedOnStyle:  Google
+ColumnLimit:     100
+IndentWidth:     2

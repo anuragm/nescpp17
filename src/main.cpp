@@ -1,11 +1,11 @@
 #include <iostream>
-#include "cpu.hpp"
+
 #include "cartridge.hpp"
+#include "cpu.hpp"
 
-int main(int argc, char** argv){
-
-  if (argc!=2){
-    std::printf("Need a file name. %s <filename>\n",argv[0]);
+int main(int argc, char **argv) {
+  if (argc != 2) {
+    std::printf("Need a file name. %s <filename>\n", argv[0]);
     return 0;
   }
 
