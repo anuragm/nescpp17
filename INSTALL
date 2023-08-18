@@ -1,6 +1,0 @@
-The project uses CMake. To compile and install, use
-
-cd build/
-cmake ..
-make
-make install
